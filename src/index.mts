@@ -2,13 +2,15 @@ import { Atmosphere, PlanetType, Species, StarCondition, Volcanism } from './con
 import { species } from './species.mjs';
 import { createNumber, matchesNumberCondition, populateDropdown } from './utils.mjs';
 
-const $volcanism = document.querySelector('#volcanism');
-const $atmosphere = document.querySelector('#atmosphere');
-const $planetType = document.querySelector('#planetType');
-const $star = document.querySelector('#star');
-const $gravity = document.querySelector('#gravity');
-const $temperature = document.querySelector('#temperature');
-const $results = document.querySelector('#results');
+const $volcanism = document.querySelector('#volcanism') as HTMLSelectElement | null;
+const $atmosphere = document.querySelector('#atmosphere') as HTMLSelectElement | null;
+const $planetType = document.querySelector('#planetType') as HTMLSelectElement | null;
+const $star = document.querySelector('#star') as HTMLSelectElement | null;
+const $gravity = document.querySelector('#gravity') as HTMLSelectElement | null;
+const $temperature = document.querySelector('#temperature') as HTMLInputElement | null;
+const $distance = document.querySelector('#distance') as HTMLInputElement | null;
+const $results = document.querySelector('#results') as HTMLTableSectionElement | null;
+const $filterStats = document.querySelector('#filter-stats') as HTMLTableCellElement | null;
 
 populateDropdown(Volcanism, $volcanism);
 populateDropdown(Atmosphere, $atmosphere);
@@ -16,63 +18,73 @@ populateDropdown(PlanetType, $planetType);
 populateDropdown(StarCondition, $star);
 
 document.querySelectorAll('#search input, #search select').forEach((el) => {
-  el.addEventListener('change', handleChange);
-  el.addEventListener('input', handleChange);
+  el.addEventListener('change', filterResults);
+  el.addEventListener('input', filterResults);
 });
 
-function handleChange() {
+function filterResults() {
   $results!.innerHTML = '';
   const results = findResults();
+  $filterStats!.textContent = `${results.length} / ${species.length}`;
   for (const r of results) {
     addResult(r);
   }
 }
 
-function findResults(): Species[] {
-  const volcanism = ($volcanism as HTMLSelectElement | null)?.value as
-    | keyof typeof Volcanism
-    | null;
-  const atmosphere = ($atmosphere as HTMLSelectElement | null)?.value as
-    | keyof typeof Atmosphere
-    | null;
-  const planetType = ($planetType as HTMLSelectElement | null)?.value as
-    | keyof typeof PlanetType
-    | null;
-  const star = ($star as HTMLSelectElement | null)?.value as keyof typeof StarCondition | null;
-  const gravity = ($gravity as HTMLSelectElement | null)?.value as number | undefined;
-  const temperature = ($temperature as HTMLInputElement | null)?.value as number | undefined;
+type MaybeEnum = '*' | null | '' | undefined;
+type MaybeNumber = '' | undefined | null | number;
 
-  console.log(planetType, PlanetType[planetType!]);
+function findResults(): Species[] {
+  const volcanism = $volcanism?.value as MaybeEnum | keyof typeof Volcanism;
+  const atmosphere = $atmosphere?.value as MaybeEnum | keyof typeof Atmosphere;
+  const planetType = $planetType?.value as MaybeEnum | keyof typeof PlanetType;
+  const star = $star?.value as MaybeEnum | keyof typeof StarCondition;
+  const gravity = $gravity?.value as MaybeNumber | '*';
+  const temperature = $temperature?.value as MaybeNumber;
+  const distance = $distance?.value as MaybeNumber;
 
   return species
     .filter(
       (s) =>
-        !volcanism ||
         !s.conditions.volcanism ||
-        s.conditions.volcanism?.includes(Volcanism[volcanism])
+        volcanism === '*' ||
+        (volcanism && s.conditions.volcanism?.includes(Volcanism[volcanism]))
     )
     .filter(
       (s) =>
-        !atmosphere ||
         !s.conditions.atmosphere ||
-        s.conditions.atmosphere?.includes(Atmosphere[atmosphere])
+        atmosphere === '*' ||
+        (atmosphere && s.conditions.atmosphere?.includes(Atmosphere[atmosphere]))
     )
     .filter(
       (s) =>
-        !planetType ||
         !s.conditions.planetType ||
-        s.conditions.planetType?.includes(PlanetType[planetType])
-    )
-    .filter((s) => !star || !s.conditions.star || s.conditions.star?.includes(StarCondition[star]))
-    .filter(
-      (s) =>
-        !gravity || !s.conditions.gravity || matchesNumberCondition(gravity, s.conditions.gravity)
+        planetType === '*' ||
+        (planetType && s.conditions.planetType?.includes(PlanetType[planetType]))
     )
     .filter(
       (s) =>
-        !temperature ||
+        !s.conditions.star ||
+        star === '*' ||
+        (star && s.conditions.star?.includes(StarCondition[star]))
+    )
+    .filter(
+      (s) =>
+        !s.conditions.gravity ||
+        gravity === '*' ||
+        (gravity && matchesNumberCondition(gravity, s.conditions.gravity))
+    )
+    .filter(
+      (s) =>
         !s.conditions.temperature ||
-        matchesNumberCondition(temperature, s.conditions.temperature)
+        temperature === '' ||
+        (temperature && matchesNumberCondition(temperature, s.conditions.temperature))
+    )
+    .filter(
+      (s) =>
+        !s.conditions.distance ||
+        distance === '' ||
+        (distance && matchesNumberCondition(distance, s.conditions.distance))
     );
 }
 
@@ -90,6 +102,9 @@ function addResult(species: Species) {
   $tr.append(
     createTd(species.conditions.gravity && createNumber(species.conditions.gravity) + ' g')
   );
+  $tr.append(
+    createTd(species.conditions.distance && createNumber(species.conditions.distance) + ' Ls')
+  );
   $tr.append(createTd(species.conditions.star?.join(' or ')));
 
   if ((species.salesValue.min || 0) >= 350_000) {
@@ -106,3 +121,5 @@ function createTd(content: any) {
   $td.textContent = content;
   return $td;
 }
+
+filterResults();
