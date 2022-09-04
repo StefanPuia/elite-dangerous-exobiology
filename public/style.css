@@ -1,0 +1,40 @@
+body {
+  padding: 0;
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#result-table {
+  border-collapse: collapse;
+}
+
+#result-table thead {
+  font-weight: bold;
+}
+
+#result-table td {
+  padding: 5px;
+  white-space: nowrap;
+}
+
+#result-table #results tr:hover td {
+  background-color: rgba(179, 255, 87, 0.178) !important;
+}
+
+#result-table #results tr td:nth-child(4),
+#result-table #results tr td:nth-child(5),
+#result-table #results tr td:nth-child(6) {
+  white-space: normal;
+}
+
+#result-table tr:nth-child(2n) td {
+  background-color: rgba(255, 228, 196, 0.178);
+}
+
+#container {
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+  justify-content: space-between;
+  width: 90vw;
+}

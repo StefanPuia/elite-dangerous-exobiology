@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark light" />
+    <script defer async type="module" src="./js/index.mjs"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>Exobiology</title>
+  </head>
+  <body>
+    <div id="container">
+      <section>
+        <form id="search">
+          <table>
+            <tr>
+              <td>Volcanism</td>
+              <td>
+                <select id="volcanism">
+                  <option></option>
+                </select>
+              </td>
+            </tr>
+
+            <tr>
+              <td>Atmosphere</td>
+              <td>
+                <select id="atmosphere">
+                  <option></option>
+                </select>
+              </td>
+            </tr>
+
+            <tr>
+              <td>Planet Type</td>
+              <td>
+                <select id="planetType">
+                  <option></option>
+                </select>
+              </td>
+            </tr>
+
+            <tr>
+              <td>Gravity</td>
+              <td>
+                <select id="gravity">
+                  <option></option>
+                  <option value="0.15">Less Than 0.15g</option>
+                  <option value="0.27">Less Than 0.27g</option>
+                </select>
+              </td>
+            </tr>
+
+            <tr>
+              <td>Temperature</td>
+              <td>
+                <input type="number" id="temperature" />
+              </td>
+            </tr>
+
+            <tr>
+              <td>Star/System Type</td>
+              <td>
+                <select id="star">
+                  <option></option>
+                </select>
+              </td>
+            </tr>
+          </table>
+        </form>
+      </section>
+      <section>
+        <table id="result-table">
+          <thead>
+            <tr>
+              <td>Genus</td>
+              <td>Name</td>
+              <td>Payout</td>
+              <td>Planet Type</td>
+              <td>Atmosphere</td>
+              <td>Volcanism</td>
+              <td>Temperature</td>
+              <td>Gravity</td>
+              <td>Star</td>
+            </tr>
+          </thead>
+          <tbody id="results"></tbody>
+        </table>
+      </section>
+    </div>
+  </body>
+</html>

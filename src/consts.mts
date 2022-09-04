@@ -1,31 +1,41 @@
-type Volcanism =
-  | 'Ammonia'
-  | 'Carbon'
-  | 'Helium'
-  | 'Iron'
-  | 'Methane'
-  | 'Nitrogen'
-  | 'Rocky'
-  | 'Silicate'
-  | 'Argon'
-  | 'Argon Rich'
-  | 'Icy'
-  | 'Rocky Ice'
-  | 'Water';
-type Atmosphere =
-  | 'Ammonia'
-  | 'Argon'
-  | 'Carbon Dioxide'
-  | 'Helium'
-  | 'Methane'
-  | 'Neon'
-  | 'Nitrogen'
-  | 'Oxygen'
-  | 'Sulfur Dioxide'
-  | 'Water';
-type PlanetType = 'Icy' | 'Rocky Ice' | 'Rocky' | 'High Metal Content';
-type StarCondition = string;
-type NumberCondition = {
+export enum Volcanism {
+  Ammonia = 'Ammonia',
+  Argon = 'Argon',
+  ArgonRich = 'Argon Rich',
+  Carbon = 'Carbon',
+  Helium = 'Helium',
+  Icy = 'Icy',
+  Iron = 'Iron',
+  Methane = 'Methane',
+  Nitrogen = 'Nitrogen',
+  Rocky = 'Rocky',
+  RockyIce = 'Rocky Ice',
+  Silicate = 'Silicate',
+  Water = 'Water',
+}
+export enum Atmosphere {
+  Ammonia = 'Ammonia',
+  Argon = 'Argon',
+  CarbonDioxide = 'Carbon Dioxide',
+  Helium = 'Helium',
+  Methane = 'Methane',
+  Neon = 'Neon',
+  Nitrogen = 'Nitrogen',
+  Oxygen = 'Oxygen',
+  SulfurDioxide = 'Sulfur Dioxide',
+  Water = 'Water',
+}
+export enum PlanetType {
+  Icy = 'Icy',
+  RockyIce = 'Rocky Ice',
+  Rocky = 'Rocky',
+  HighMetalContent = 'High Metal Content',
+}
+export enum StarCondition {
+  Nebulae = 'Nebulae',
+  AVPlus = 'A V+',
+};
+export type NumberCondition = {
   min?: number;
   max?: number;
 };
@@ -36,7 +46,6 @@ export const GRAVITY: Record<string, NumberCondition> = {
   LESS_THAN_027G: {
     max: 0.27,
   },
-  ANY: {},
 };
 export const SALES_VALUE: Record<string, NumberCondition> = {
   LOW: {
@@ -103,7 +112,7 @@ export const TEMPERATURE: Record<string, NumberCondition> = {
     min: 190,
   },
   T_LT_190K: {
-    min: 190,
+    max: 190,
   },
 };
 
@@ -111,13 +120,13 @@ export type Species = {
   genus: string;
   name: string;
   conditions: {
-    gravity?: NumberCondition[];
+    gravity?: NumberCondition;
     volcanism?: Volcanism[];
     atmosphere?: Atmosphere[];
     planetType?: PlanetType[];
-    temperature?: NumberCondition[];
+    temperature?: NumberCondition;
     star?: StarCondition[];
-    distance?: NumberCondition[];
+    distance?: NumberCondition;
   };
-  salesValue: NumberCondition[];
+  salesValue: NumberCondition;
 };
